@@ -1,6 +1,7 @@
 package com.erazo.springApp.models.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,21 +25,23 @@ public class ClienteServiceImp implements IClienteService{
 	public List<Cliente> findAll() {
 		return (List<Cliente>) clienteDao.findAll();
 	}
-/*
-	
-	@Autowired
-	private IClienteDao clienteDao;
-	
-	public ClienteServiceImp(IClienteDao cd) {
-		this.clienteDao = cd;
-	}
-	
 	
 	@Override
 	@Transactional(readOnly=true)
-	public List<Cliente> findAll() {
-		return (List<Cliente>) clienteDao.findAll();
+	public Cliente findById(Long id) {
+		return clienteDao.findById(id).orElse(null);
 	}
-*/
-
+	
+	@Override
+	@Transactional(readOnly=true)
+	public Cliente save(Cliente cliente) {
+		return clienteDao.save(cliente);
+	}
+	
+	@Override
+	@Transactional(readOnly=true)
+	public void delete(Long id) {
+		clienteDao.deleteById(id);
+	}
+	
 }
