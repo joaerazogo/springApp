@@ -1,8 +1,8 @@
 package com.erazo.springApp.controller;
 
 import java.util.Date;
+
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,14 +46,14 @@ public class ClienteRestController {
 		return clienteService.findById(id);
 	}
 	
-	@PostMapping("/clientes")
+	@PostMapping("/guardarClientes")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente create(@RequestBody Cliente cliente) {
 		cliente.setCreateAt(new Date());
 		return clienteService.save(cliente);
 	}
 	
-	@PutMapping("/clientes/{id}")
+	@PutMapping("/actualizarCliente/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente update(@RequestBody Cliente cliente, @PathVariable Long id) {
 		Cliente clienteActual = clienteService.findById(id);
@@ -63,7 +63,7 @@ public class ClienteRestController {
 		return clienteService.save(clienteActual);
 	}
 	
-	@DeleteMapping("/clientes/{id}")
+	@DeleteMapping("/borrarCliente/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {
 		clienteService.delete(id);
