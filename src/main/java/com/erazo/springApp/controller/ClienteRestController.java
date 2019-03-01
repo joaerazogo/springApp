@@ -1,7 +1,6 @@
 package com.erazo.springApp.controller;
 
 import java.util.Date;
-
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +45,7 @@ public class ClienteRestController {
 		return clienteService.findById(id);
 	}
 	
-	@PostMapping("/guardarClientes")
+	@PostMapping("/clientes")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente create(@RequestBody Cliente cliente) {
 		cliente.setCreateAt(new Date());
@@ -58,15 +57,27 @@ public class ClienteRestController {
 	public Cliente update(@RequestBody Cliente cliente, @PathVariable Long id) {
 		Cliente clienteActual = clienteService.findById(id);
 		clienteActual.setNombre(cliente.getNombre());
-		clienteActual.setNombre(cliente.getApellido());
-		clienteActual.setNombre(cliente.getEmail());
+		clienteActual.setApellido(cliente.getApellido());
+		clienteActual.setEmail(cliente.getEmail());
 		return clienteService.save(clienteActual);
 	}
 	
 	@DeleteMapping("/borrarCliente/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable Long id) {
-		clienteService.delete(id);
+	public ResponseEntity<String> deleteCustomer(@PathVariable("id") Long id) {
+		System.out.println("Delete Customer with ID = " + id + "...");
+
+		clienteService.deleteById(id);
+
+		return new ResponseEntity<>("Customer has been deleted!", HttpStatus.OK);
 	}
+	
+	/*
+	@DeleteMapping("/borrarCliente/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public void delete(@PathVariable("id") Long id, Cliente cliente) {
+		Cliente clienteEliminado = clienteService.findById(id);
+		clienteService.delete(clienteEliminado);
+	}
+	*/
 	
 }

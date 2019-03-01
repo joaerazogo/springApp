@@ -22,7 +22,7 @@ public class Cliente implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private Integer id;
+	private Long id;
 	private String nombre;
 	private String apellido;
 	private String email;
@@ -36,11 +36,11 @@ public class Cliente implements Serializable {
 		createAt = new Date();
 	}
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
