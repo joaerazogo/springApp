@@ -28,11 +28,12 @@ public class Factura implements Serializable{
 	@Column(name="num_factura")
 	private Integer numfactura;
 	
+	/*
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id", nullable = false)
     @JsonIgnore
 	private Cliente idClient;
-	
+	*/
 	@Column(name="fecha")
 	@Temporal(TemporalType.DATE)
 	private Date fechaFactura;
@@ -43,12 +44,14 @@ public class Factura implements Serializable{
 	public void setNumfactura(Integer numfactura) {
 		this.numfactura = numfactura;
 	}
+	/*
 	public Cliente getIdClient() {
 		return idClient;
 	}
 	public void setIdClient(Cliente idClient) {
 		this.idClient = idClient;
 	}
+	*/
 	public Date getFecha() {
 		return fechaFactura;
 	}

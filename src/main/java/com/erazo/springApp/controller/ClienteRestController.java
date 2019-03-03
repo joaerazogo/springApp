@@ -52,7 +52,7 @@ public class ClienteRestController {
 		return clienteService.save(cliente);
 	}
 	
-	@PutMapping("/actualizarCliente/{id}")
+	@PutMapping("/clientes/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente update(@RequestBody Cliente cliente, @PathVariable Long id) {
 		Cliente clienteActual = clienteService.findById(id);
@@ -62,22 +62,10 @@ public class ClienteRestController {
 		return clienteService.save(clienteActual);
 	}
 	
-	@DeleteMapping("/borrarCliente/{id}")
-	public ResponseEntity<String> deleteCustomer(@PathVariable("id") Long id) {
-		System.out.println("Delete Customer with ID = " + id + "...");
-
-		clienteService.deleteById(id);
-
-		return new ResponseEntity<>("Customer has been deleted!", HttpStatus.OK);
-	}
-	
-	/*
-	@DeleteMapping("/borrarCliente/{id}")
+	@DeleteMapping("/clientes/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@PathVariable("id") Long id, Cliente cliente) {
 		Cliente clienteEliminado = clienteService.findById(id);
 		clienteService.delete(clienteEliminado);
-	}
-	*/
-	
+	}	
 }
