@@ -18,7 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="clientes")
+@Table(name="clientes", schema = "\"public\"")
 public class Cliente implements Serializable {
 
 	//no es tan necesario
@@ -27,8 +27,13 @@ public class Cliente implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
+	
+	@Column(nullable=false)
 	private String nombre;
+	
 	private String apellido;
+	
+	@Column(nullable=false, unique=true)
 	private String email;
 	
 	@Column(name="create_at")

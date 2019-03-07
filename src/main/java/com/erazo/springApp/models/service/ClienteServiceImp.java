@@ -30,7 +30,6 @@ public class ClienteServiceImp implements IClienteService{
 	}
 	
 	@Override
-	//@Transactional(readOnly=true)
 	public Cliente save(Cliente cliente) {
 		return clienteDao.save(cliente);
 	}
