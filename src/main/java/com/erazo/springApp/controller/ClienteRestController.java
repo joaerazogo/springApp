@@ -1,8 +1,6 @@
 package com.erazo.springApp.controller;
 
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
@@ -34,13 +32,9 @@ public class ClienteRestController {
 	}
 
 	@GetMapping("/clientes")
-	public ResponseEntity<List<Cliente>> index() {
-		List<Cliente> clientes = clienteService.findAll();
+	public ResponseEntity<?> index() {
 		
-		if(clientes.isEmpty())
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
-		return new ResponseEntity<>(clientes, HttpStatus.OK);
+		return clienteService.findAll();
 	}
 
 	@GetMapping("/clientes/{id}")
@@ -68,30 +62,40 @@ public class ClienteRestController {
 	@PostMapping("/clientes")
 	public ResponseEntity<?> create(@RequestBody Cliente cliente) {
 		
-		Cliente clientNew = null;
-		Map<String, Object> response = new HashMap<>();
+		return clienteService.save(cliente);
 		
-		try {
-			clientNew = clienteService.save(cliente);
-		} catch (DataAccessException e) {
-			response.put("mensaje", "Error al realizar la inserción a la base de datos");
-			response.put("mensaje", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		cliente.setCreateAt(new Date());
-		response.put("mensaje", "El cliente se ha creado con éxito");
-		response.put("cliente", clientNew);
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/clientes/{id}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente update(@RequestBody Cliente cliente, @PathVariable Long id) {
+	public ResponseEntity<?> update(@RequestBody Cliente cliente, @PathVariable Long id) {
+		
 		Cliente clienteActual = clienteService.findById(id);
-		clienteActual.setNombre(cliente.getNombre());
-		clienteActual.setApellido(cliente.getApellido());
-		clienteActual.setEmail(cliente.getEmail());
-		return clienteService.save(clienteActual);
+		ResponseEntity<?> clienteUpdated = null;
+		Map<String, Object> response = new HashMap<>();
+		
+		if (clienteActual == null) {
+			response.put("mensaje", "Error: no se pudo editar, el cliente ID: ".concat(id.toString().concat(" no existe en la base de datos")));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+		}
+		
+		try {
+			clienteActual.setNombre(cliente.getNombre());
+			clienteActual.setApellido(cliente.getApellido());
+			clienteActual.setEmail(cliente.getEmail());
+			clienteActual.setCreateAt(cliente.getCreateAt());
+			clienteUpdated = clienteService.save(clienteActual);
+			
+		} catch (DataAccessException e) {
+			response.put("mensaje", "Error al actualizar en la base de datos");
+			response.put("mensaje", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		response.put("mensaje", "El cliente se ha actualizado con éxito");
+		response.put("cliente", clienteUpdated);
+		
+		
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/clientes/{id}")
