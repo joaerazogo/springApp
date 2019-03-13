@@ -44,27 +44,11 @@ public class ClienteServiceImp implements IClienteService{
 	}
 	
 	@Override
-	public ResponseEntity<?> save(Cliente cliente) {
-		
-		Cliente clientNew = null;
-		Map<String, Object> response = new HashMap<>();
-		
-		try {
-			cliente.setCreateAt(new Date());
-			clientNew = clienteDao.save(cliente);
-		} catch (DataAccessException e) {
-			response.put("mensaje", "Error al realizar la inserción a la base de datos");
-			response.put("mensaje", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		response.put("mensaje", "El cliente se ha creado con éxito");
-		response.put("cliente", clientNew);
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+	public Cliente save(Cliente cliente) {
+		return clienteDao.save(cliente);
 	}
 	
 	@Override
-	@Transactional(readOnly=true)
 	public void delete(Cliente cliente) {
 		clienteDao.delete(cliente);
 	}

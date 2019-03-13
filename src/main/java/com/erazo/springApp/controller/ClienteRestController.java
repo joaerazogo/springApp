@@ -1,5 +1,6 @@
 package com.erazo.springApp.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +63,21 @@ public class ClienteRestController {
 	@PostMapping("/clientes")
 	public ResponseEntity<?> create(@RequestBody Cliente cliente) {
 		
-		return clienteService.save(cliente);
+		Cliente clientNew = null;
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			cliente.setCreateAt(new Date());
+			clientNew = clienteService.save(cliente);
+		} catch (DataAccessException e) {
+			response.put("mensaje", "Error al realizar la inserción a la base de datos");
+			response.put("mensaje", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		response.put("mensaje", "El cliente se ha creado con éxito");
+		response.put("cliente", clientNew);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 		
 	}
 	
@@ -70,7 +85,7 @@ public class ClienteRestController {
 	public ResponseEntity<?> update(@RequestBody Cliente cliente, @PathVariable Long id) {
 		
 		Cliente clienteActual = clienteService.findById(id);
-		ResponseEntity<?> clienteUpdated = null;
+		Cliente clienteUpdated = null;
 		Map<String, Object> response = new HashMap<>();
 		
 		if (clienteActual == null) {
@@ -99,9 +114,21 @@ public class ClienteRestController {
 	}
 	
 	@DeleteMapping("/clientes/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public void delete(@PathVariable("id") Long id, Cliente cliente) {
-		Cliente clienteEliminado = clienteService.findById(id);
-		clienteService.delete(clienteEliminado);
+	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+		
+		Cliente cliente = clienteService.findById(id);
+		Map<String, Object> response = new HashMap<>();
+		
+		try { 
+			clienteService.delete(cliente);
+		} catch (DataAccessException e) {
+			response.put("mensaje", "Error al eliminar el cliente de la base de datos");
+			response.put("mensaje", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		response.put("mensaje", "El cliente se ha elminado con éxito");
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+		
 	}	
 }
